@@ -16,8 +16,7 @@ function App() {
 
 
   useEffect(() => {
-
-    fetch("http://10.11.108.124:8000/risk-scores")
+    fetch("http://localhost:8000/risk-scores")
 
       .then((response) => {
 
