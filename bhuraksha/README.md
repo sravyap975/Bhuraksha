@@ -7,11 +7,21 @@ improve it from here.
 ## Folder structure
 ```
 bhuraksha/
-├── data/sample_zones.csv     ← sample hill zones with rainfall/slope data
-├── model/train_model.py      ← trains the risk-scoring model (Member 1)
-├── model/risk_model.pkl      ← the trained model (created after you run train_model.py)
-└── api/main.py                ← the backend API (Member 2)
+├── data/sample_zones.csv ← hill zones with rainfall/slope data (original + synthetic rows)
+├── model/train_model.py ← trains the risk-scoring model (Member 1)
+├── model/risk_model.pkl ← the trained model (created after you run train_model.py)
+└── api/main.py ← the backend API (Member 2)
 ```
+
+
+## ⚠️ Important: some rows are SYNTHETIC, not real
+
+`data/sample_zones.csv` contains your team's original rows PLUS rows
+appended by `generate_synthetic_data.py` (their `zone_id` starts with
+`synthetic_` so you can always tell them apart). The synthetic rows
+are made-up numbers, not real GSI/IMD/Bhuvan data — say so clearly in
+your pitch and PPT. Replace the synthetic rows with real measurements
+before any real deployment.
 
 ## Step 1 — Train the model (Member 1)
 ```bash
@@ -19,12 +29,13 @@ cd model
 pip install scikit-learn pandas joblib --break-system-packages
 python train_model.py
 ```
-This reads `sample_zones.csv`, trains a Random Forest, and saves
-`risk_model.pkl`. You'll see risk scores printed for each sample zone.
+This reads `sample_zones.csv`, splits it into train/test sets, trains
+a Random Forest, and honestly reports accuracy on data the model never
+saw. You'll see risk scores printed for each zone.
 
-**To make this your own:** add more rows to `sample_zones.csv` with real
-NER district data if you find any (rainfall, slope, historical landslide
-yes/no), then re-run the script.
+**To make this your own:** once you have real data (even a small
+amount from GSI/IMD), add it as new rows with a clear `zone_id` prefix
+(e.g. `real_`), keeping the same column names, then re-run this script.
 
 ## Step 2 — Run the API (Member 2)
 ```bash
@@ -36,7 +47,7 @@ Then open in a browser:
 - http://localhost:8000/risk-scores  → every zone's risk score
 - http://localhost:8000/alerts       → only the dangerous zones
 
-This is what Member 3 (map maker) will connect the dashboard to.
+This is what Member 3 (map maker) connects the dashboard to.
 
 ## What each endpoint returns (the "contract" the whole team agreed on)
 
