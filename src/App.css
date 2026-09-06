@@ -190,10 +190,29 @@ body {
 
 .app {
   padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: left;
 }
 
-header {
-  margin-bottom: 20px;
+header h1 {
+  margin: 0 0 4px;
+  text-align: left;
+}
+
+header p {
+  text-align: left;
+  color: #555;
+}
+
+.alert-banner {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5c6cb;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .dashboard {

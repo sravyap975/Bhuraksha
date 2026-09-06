@@ -9,6 +9,7 @@ import "./App.css";
 function App() {
 
   const [riskData, setRiskData] = useState([]);
+  const [alerts, setAlerts] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -16,36 +17,26 @@ function App() {
 
 
   useEffect(() => {
-    fetch("http://localhost:8000/risk-scores")
-
-      .then((response) => {
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch risk data");
-        }
-
-        return response.json();
-
-      })
-
-      .then((data) => {
-
-        console.log("API DATA:", data);
-
-        setRiskData(data);
-
+    Promise.all([
+      fetch("http://localhost:8000/risk-scores").then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch risk data");
+        return r.json();
+      }),
+      fetch("http://localhost:8000/alerts").then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch alerts");
+        return r.json();
+      }),
+    ])
+      .then(([riskResult, alertsResult]) => {
+        console.log("API DATA:", riskResult);
+        setRiskData(riskResult);
+        setAlerts(alertsResult);
         setLoading(false);
-
       })
-
       .catch((error) => {
-
         console.error("API ERROR:", error);
-
         setError(error.message);
-
         setLoading(false);
-
       });
 
   }, []);
@@ -95,13 +86,19 @@ function App() {
 
       <header>
 
-        <h1>🛡️ GiriRaksha</h1>
+        <h1>🛡️ Bhuraksha</h1>
 
         <p>
-          Landslide Risk Monitoring System
+          AI-Based Landslide Early Warning & Risk Monitoring — NER
         </p>
 
       </header>
+
+      {alerts.length > 0 && (
+        <div className="alert-banner">
+          🚨 {alerts.length} active alert{alerts.length > 1 ? "s" : ""}: {alerts[0].message}
+        </div>
+      )}
 
 
       <div className="dashboard">
