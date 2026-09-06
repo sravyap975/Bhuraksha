@@ -85,9 +85,15 @@ def get_risk_scores():
 
 @app.get("/alerts")
 def get_alerts():
-    """Returns only zones that are risky enough to warn people about."""
+    """Returns only zones that are risky enough to warn people about,
+    and that have an explainable reason - a high score with no
+    concrete cause (e.g. borderline slope/rainfall/soil values that
+    didn't individually cross a threshold) is not shown as an alert."""
     all_zones = compute_risk_scores()
-    alerts = [z for z in all_zones if z["risk"] >= 70]
+    alerts = [
+        z for z in all_zones
+        if z["risk"] >= 70 and z["reason"] != "normal conditions"
+    ]
     return [
         {
             "zone_id": z["zone_id"],
