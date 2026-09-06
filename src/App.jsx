@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import RiskMap from "./components/RiskMap";
 import RiskPanel from "./components/RiskPanel";
+import MobileApp from "./components/MobileApp";
 
 import "./App.css";
 
@@ -10,6 +11,7 @@ function App() {
 
   const [riskData, setRiskData] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [view, setView] = useState("dashboard"); // "dashboard" | "mobile"
 
   const [loading, setLoading] = useState(true);
 
@@ -77,6 +79,20 @@ function App() {
       <div className="app-header">
         <h1>🛡️ Bhuraksha</h1>
         <span className="tagline">AI-based landslide early warning — North Eastern Region</span>
+        <div className="view-switch">
+          <button
+            className={view === "dashboard" ? "active" : ""}
+            onClick={() => setView("dashboard")}
+          >
+            District dashboard
+          </button>
+          <button
+            className={view === "mobile" ? "active" : ""}
+            onClick={() => setView("mobile")}
+          >
+            📱 Citizen app
+          </button>
+        </div>
       </div>
 
       <div className="app-body">
@@ -87,33 +103,39 @@ function App() {
           </div>
         )}
 
-        <div className="dashboard">
+        {view === "dashboard" ? (
+          <div className="dashboard">
 
-          <RiskPanel riskData={riskData} />
+            <RiskPanel riskData={riskData} />
 
-          <div>
-            <div className="map-card">
-              <RiskMap riskData={riskData} />
-              <div className="legend">
-                <div className="legend-group">
-                  <span className="legend-label">Zone risk</span>
-                  <span className="legend-swatch" style={{ background: "#b1432f" }}></span> Critical
-                  <span className="legend-swatch" style={{ background: "#c0793a" }}></span> High
-                  <span className="legend-swatch" style={{ background: "#b8973a" }}></span> Moderate
-                  <span className="legend-swatch" style={{ background: "#4a7a5a" }}></span> Low
-                </div>
-                <div className="legend-group">
-                  <span className="legend-label">Roads</span>
-                  <span className="legend-line" style={{ background: "#c0392b" }}></span> Blocked
-                  <span className="legend-line" style={{ background: "#e67e22" }}></span> At risk
-                  <span className="legend-line" style={{ background: "#f1c40f" }}></span> Monitor
-                  <span className="legend-line" style={{ background: "#2ecc71" }}></span> Open
+            <div>
+              <div className="map-card">
+                <RiskMap riskData={riskData} />
+                <div className="legend">
+                  <div className="legend-group">
+                    <span className="legend-label">Zone risk</span>
+                    <span className="legend-swatch" style={{ background: "#b1432f" }}></span> Critical
+                    <span className="legend-swatch" style={{ background: "#c0793a" }}></span> High
+                    <span className="legend-swatch" style={{ background: "#b8973a" }}></span> Moderate
+                    <span className="legend-swatch" style={{ background: "#4a7a5a" }}></span> Low
+                  </div>
+                  <div className="legend-group">
+                    <span className="legend-label">Roads</span>
+                    <span className="legend-line" style={{ background: "#c0392b" }}></span> Blocked
+                    <span className="legend-line" style={{ background: "#e67e22" }}></span> At risk
+                    <span className="legend-line" style={{ background: "#f1c40f" }}></span> Monitor
+                    <span className="legend-line" style={{ background: "#2ecc71" }}></span> Open
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-        </div>
+          </div>
+        ) : (
+          <div className="mobile-demo-wrap">
+            <MobileApp alerts={alerts} />
+          </div>
+        )}
 
       </div>
 
