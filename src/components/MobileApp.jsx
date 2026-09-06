@@ -4,6 +4,11 @@ import { useState } from "react";
 // phone-frame for demo purposes. It talks to the SAME backend as the
 // GIS dashboard (Member 2's API) - this is not a disconnected mockup.
 
+function truncate(text, max = 80) {
+  if (!text || text.length <= max) return text;
+  return text.slice(0, max).trim() + "…";
+}
+
 function AlertsScreen({ alerts }) {
   return (
     <div className="mobile-screen">
@@ -12,7 +17,7 @@ function AlertsScreen({ alerts }) {
       {alerts.map((a) => (
         <div key={a.zone_id} className={`mobile-alert-card sev-${a.severity}`}>
           <div className="mobile-alert-zone">{a.zone_id}</div>
-          <div className="mobile-alert-msg">{a.message}</div>
+          <div className="mobile-alert-msg">{truncate(a.message)}</div>
         </div>
       ))}
     </div>
