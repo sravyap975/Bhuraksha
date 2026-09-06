@@ -74,7 +74,7 @@ function RiskMap({ riskData }) {
       center={[25.5, 92.0]}
       zoom={6}
       style={{
-        height: "600px",
+        height: "560px",
         width: "100%"
       }}
     >

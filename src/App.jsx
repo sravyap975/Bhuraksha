@@ -28,7 +28,6 @@ function App() {
       }),
     ])
       .then(([riskResult, alertsResult]) => {
-        console.log("API DATA:", riskResult);
         setRiskData(riskResult);
         setAlerts(alertsResult);
         setLoading(false);
@@ -43,80 +42,83 @@ function App() {
 
 
   if (loading) {
-
     return (
       <div className="app">
-
-        <h2>
-          Loading landslide risk data...
-        </h2>
-
+        <div className="app-header">
+          <h1>🛡️ Bhuraksha</h1>
+        </div>
+        <div className="app-body">
+          <p>Loading landslide risk data...</p>
+        </div>
       </div>
     );
-
   }
 
 
   if (error) {
-
     return (
       <div className="app">
-
-        <h2>
-          ❌ Unable to connect to risk server
-        </h2>
-
-        <p>
-          Make sure the FastAPI server is running.
-        </p>
-
-        <p>
-          Error: {error}
-        </p>
-
+        <div className="app-header">
+          <h1>🛡️ Bhuraksha</h1>
+        </div>
+        <div className="app-body">
+          <h2>Unable to connect to risk server</h2>
+          <p>Make sure the FastAPI server is running on port 8000.</p>
+          <p>Error: {error}</p>
+        </div>
       </div>
     );
-
   }
 
 
   return (
-
     <div className="app">
 
-      <header>
-
+      <div className="app-header">
         <h1>🛡️ Bhuraksha</h1>
+        <span className="tagline">AI-based landslide early warning — North Eastern Region</span>
+      </div>
 
-        <p>
-          AI-Based Landslide Early Warning & Risk Monitoring — NER
-        </p>
+      <div className="app-body">
 
-      </header>
+        {alerts.length > 0 && (
+          <div className="alert-banner">
+            <b>{alerts.length} active alert{alerts.length > 1 ? "s" : ""}</b> — {alerts[0].message}
+          </div>
+        )}
 
-      {alerts.length > 0 && (
-        <div className="alert-banner">
-          🚨 {alerts.length} active alert{alerts.length > 1 ? "s" : ""}: {alerts[0].message}
+        <div className="dashboard">
+
+          <RiskPanel riskData={riskData} />
+
+          <div>
+            <div className="map-card">
+              <RiskMap riskData={riskData} />
+              <div className="legend">
+                <div className="legend-group">
+                  <span className="legend-label">Zone risk</span>
+                  <span className="legend-swatch" style={{ background: "#b1432f" }}></span> Critical
+                  <span className="legend-swatch" style={{ background: "#c0793a" }}></span> High
+                  <span className="legend-swatch" style={{ background: "#b8973a" }}></span> Moderate
+                  <span className="legend-swatch" style={{ background: "#4a7a5a" }}></span> Low
+                </div>
+                <div className="legend-group">
+                  <span className="legend-label">Roads</span>
+                  <span className="legend-line" style={{ background: "#c0392b" }}></span> Blocked
+                  <span className="legend-line" style={{ background: "#e67e22" }}></span> At risk
+                  <span className="legend-line" style={{ background: "#f1c40f" }}></span> Monitor
+                  <span className="legend-line" style={{ background: "#2ecc71" }}></span> Open
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-      )}
-
-
-      <div className="dashboard">
-
-        <RiskPanel
-          riskData={riskData}
-        />
-
-        <RiskMap
-          riskData={riskData}
-        />
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default App;
